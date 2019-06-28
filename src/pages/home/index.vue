@@ -21,6 +21,7 @@
 </div>
 </template>
 <script>
+import request from '../../utils/request.js';
 export default {
     data (){
         return {
@@ -28,24 +29,53 @@ export default {
             menuData : []
         }
     },
+    methods : {
+        // 初始化数据
+        async initData (){
+            // 轮播图数据
+            const swiperRes = await request('home/swiperdata');
+            this.swiperData = swiperRes.data.message;
+            // 分类菜单数据
+            const menuRes = await request('home/catitems');
+            this.menuData = menuRes.data.message;
+        }
+    },
     created (){
+        this.initData();
         // 获取数据
-        wx.request({
-            url:'https://www.ehomespace.com/api/public/v1/home/swiperdata',
-            method:'get',
-            success: res => {
-                // console.log(res);
-                this.swiperData = res.data.message;
-            }
-        }),
-        wx.request({
-            url:'https://www.ehomespace.com/api/public/v1/home/catitems',
-            method:'get',
-            success: res => {
-                console.log(res);
-                this.menuData = res.data.message;
-            }
-        })
+        // 轮播图数据
+        // wx.request({
+        //     url:'https://www.ehomespace.com/api/public/v1/home/swiperdata',
+        //     method:'get',
+        //     success: res => {
+        //         // console.log(res);
+        //         this.swiperData = res.data.message;
+        //     }
+        // }),
+        // Promise对象优化
+        // request('home/swiperdata').then(
+        //     res => {
+        //         this.swiperData = res.data.message
+        //     }
+        // ),
+
+        // async、await优化
+        // const swiperRes = await request('home/swiperdata');
+        // this.swiperData = swiperRes.data.message;
+
+        // wx.request({
+        //     url:'https://www.ehomespace.com/api/public/v1/home/catitems',
+        //     method:'get',
+        //     success: res => {
+        //         console.log(res);
+        //         this.menuData = res.data.message;
+        //     }
+        // })
+        // request('home/catitems').then(
+        //     res => {
+        //         this.menuData = res.data.message;
+        //     }
+        // )
     }
 
 }
@@ -61,8 +91,7 @@ export default {
         input {
             background: #fff;
             vertical-align: middle;
-            padding: 0;
-            margin: 0;
+            border-radius: 10rpx;
         }
         icon {
             position: absolute;
@@ -78,7 +107,7 @@ export default {
         margin: 15rpx 0;
         .menu-item {
             flex: 1;
-            width :145rpx;
+            width :140rpx;
             height : 160rpx;
             img {
                 width:100%;
