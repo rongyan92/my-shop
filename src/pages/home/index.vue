@@ -7,7 +7,7 @@
         <icon type='search'></icon>
     </div>
     <!-- 轮播图 -->
-    <swiper indicator-dots='true'>
+    <swiper indicator-dots='true' autoplay circular>
         <swiper-item :key='index' v-for='(item,index) in swiperData'>
             <image :src='item.image_src'></image>
         </swiper-item>
@@ -32,6 +32,12 @@
             </div>
         </div>
     </div>
+
+    <!-- 返回顶部 -->
+    <div class="top" @click='toTop' v-show='flag'>
+        ToTop
+    </div>
+
 </div>
 </template>
 <script>
@@ -41,7 +47,9 @@ export default {
         return {
             swiperData : [],
             menuData : [],
-            floorData : []
+            floorData : [],
+            // 控制回到顶部按钮
+            flag : false
         }
     },
     computed : {
@@ -58,7 +66,6 @@ export default {
                 return item;
                 
             })
-            console.log(item.product_list)
         }
     },
     methods : {
@@ -75,6 +82,12 @@ export default {
             this.floorData = floorRes.data.message;
             console.log(this.floorData);
             
+        },
+        // 回到顶部
+        toTop (){
+            wx.pageScrollTo({
+                scrollTop:0
+            })
         }
     },
     created (){
@@ -113,11 +126,21 @@ export default {
         //         this.menuData = res.data.message;
         //     }
         // )
+    },
+    // 下拉刷新
+    onPullDownRefresh(){
+        this.initData();
+    },
+    // 监听页面滚动事件
+    onPageScroll(params){
+        console.log(params.scrollTop);
+        this.flag = params.scrollTop > 100
     }
 
 }
 </script>
 <style lang='less' scoped>
+    // 搜索框
     .search {
         // width : 100%;
         // height : 30rpx;
@@ -138,7 +161,6 @@ export default {
 
         }
     }
-
     // 轮播图
     swiper {
         height: 300rpx;
@@ -149,7 +171,7 @@ export default {
             }
         }
     }
-
+    // 分类菜单
     .menu {
         display: flex;
         margin: 15rpx 0;
@@ -163,7 +185,6 @@ export default {
             }
         }
     }
-
     // 楼层
     .floor {
         .floor-title {
@@ -194,5 +215,20 @@ export default {
             }
 
         }
+    }
+    // 返回顶部
+    .top {
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: 50%;
+        background: #d81e06;
+        text-align: center;
+        line-height: 100rpx;
+        font-size: 16px;
+        color: #fff;
+        position: fixed;
+        bottom: 100rpx;
+        right: 20rpx;
+        // display:none;
     }
 </style>
