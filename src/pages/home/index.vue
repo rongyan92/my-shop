@@ -1,11 +1,7 @@
 <template>
 <div>
     <!-- 搜索框 -->
-    <div class="search">
-        <!-- <span>搜索</span> -->
-        <input type="text" placeholder="搜索">
-        <icon type='search'></icon>
-    </div>
+    <search-bar></search-bar>
     <!-- 轮播图 -->
     <swiper indicator-dots='true' autoplay circular>
         <swiper-item :key='index' v-for='(item,index) in swiperData'>
@@ -41,8 +37,10 @@
 </div>
 </template>
 <script>
+import SearchBar from '../../components/SearchBar';
 import request from '../../utils/request.js';
 export default {
+    components : {SearchBar},
     data (){
         return {
             swiperData : [],
@@ -80,7 +78,7 @@ export default {
             // 楼层数据
             const floorRes = await request('home/floordata');
             this.floorData = floorRes.data.message;
-            console.log(this.floorData);
+            // console.log(this.floorData);
             
         },
         // 回到顶部
@@ -140,27 +138,6 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-    // 搜索框
-    .search {
-        // width : 100%;
-        // height : 30rpx;
-        padding: 15rpx;
-        background : #d81e06;
-        text-align : center;
-        position: relative;
-        input {
-            background: #fff;
-            vertical-align: middle;
-            border-radius: 10rpx;
-        }
-        icon {
-            position: absolute;
-            left: 55%;
-            top : 50%;
-            transform: translateY(-50%);
-
-        }
-    }
     // 轮播图
     swiper {
         height: 300rpx;
